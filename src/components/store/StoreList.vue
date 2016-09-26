@@ -6,6 +6,27 @@
   <group title="cell demo">
     <cell title="Vux" value="Cool" is-link></cell>
   </group>
+  <article>
+    <header class="page-hd">请先选择您的常用门店</header>
+    <section class="store-list">
+        <ul>
+            {{#each this.repair_shops}}
+                <li id="{{id}}" data-name="{{name}}" data-sb="{{repair_shops.name}}" data-sf="{{this.name}}">
+                    <a>
+                        <div class="store-img">
+                            <img src="{{image_url}}" alt="养车易" class="imgauto">
+                        </div>
+                        <div class="store-info">
+                            <p class="info-name">{{name}}</p>
+                            <p class="info-addr">{{address}}</p>
+                            <p class="info-dis">{{m_to_kilometer distance}}</p>
+                        </div>
+                    </a>
+                </li>
+            {{/each}}
+        </ul>
+    </section>
+  </article>
 </template>
 
 <script>

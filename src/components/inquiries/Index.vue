@@ -1,6 +1,6 @@
 <template>
 <article class="index-box">
-  <swiper :list="outerLink"></swiper>
+  <swiper :list="outerLink" auto></swiper>
   <!--div class="swiper-container swiper-container-horizontal">
     <div class="swiper-wrapper">
       <figure class="swiper-slide" v-for="link in outerLink">
@@ -76,13 +76,13 @@
     </div>
   </div>
   <section class="my-menu">
-    <ul id="menu" class="fn-hide">
-      <li id="quo"><a>报价单</a></li>
-      <li id="order"><a>预存单</a></li>
-      <li id="cou"><a>优惠券</a></li>
-      <li id="out" :class="logoutClass"><a>退出</a></li>
+    <ul id="menu" :class="style.menu">
+      <li id="quo" @click="onMenu('quo')"><a>报价单</a></li>
+      <li id="order" @click="onMenu('order')"><a>预存单</a></li>
+      <li id="cou" @click="onMenu('cou')"><a>优惠券</a></li>
+      <li id="out" :class="style.out" @click="onMenu('out')"><a>退出</a></li>
     </ul>
-    <ul class="my-ul">
+    <ul class="my-ul" @click=onMyUl()>
       <li><a>&nbsp;<em class="icon-mypeople"></em>&nbsp;</a></li>
     </ul>
   </section>
@@ -99,6 +99,8 @@
 </template>
 
 <script>
+import url from '../common/url'
+import cache from '../common/cache'
 import Swiper from 'vux/src/components/swiper'
 
 export default {
@@ -107,12 +109,8 @@ export default {
   },
   data () {
     return {
-      // 样式
-      logoutClass: {
-        'fn-hide': true
-      },
       // 数据
-      store_id: '10',
+      storeId: '10',
       sp: {
         '10': [
           {
@@ -142,33 +140,93 @@ export default {
         ]
       },
       is_login: false,
+      // 样式
+      style: {
+        menu: {
+          'fn-hide': true
+        },
+        tipLogin: {
+          'fn-hide': true
+        },
+        out: {
+          'fn-hide': true
+        }
+      },
       outerLink: null
     }
   },
   created () {
-    this.outerLink = this.sp[this.store_id]
+    let _this = this
+    this.storeId = url.getParams(window.location.search.substr(1)).store_id
+    if (!this.storeId) {
+      this.storeId = cache.getLocalStorageData(cache.keyMap.CACHE_STORE_ID)
+    }
+    // 登录态
+    if (this.storeId) {
+      // swiper
+      this.outerLink = this.sp[this.storeId]
+      // login status
+      this.$http.get('/api/v1/10/is-login').then((res) => {
+        if (res.code === 0) {
+          _this.is_login = res.data.is_login
+          console.log('get login status succ', res)
+        }
+      }, (res) => {
+        console.log('get login status faild', res)
+      })
+    }
   },
   methods: {
+    toggle (obj, key) {
+      obj[key] = !obj[key]
+    },
     inq () {
       console.log('inq')
     },
     pre () {
       console.log('pre')
     },
-    menuLi (id) {
-      console.log('menuLi')
+    onMenu (id) {
+      console.log('onMenu', id)
+      switch (id) {
+        // case 'quo':
+        //   window.page.initPage('quo_quo', {}, 1)
+        //   break
+        // case 'order':
+        //   window.page.initPage('order', {}, 1);
+        //   break;
+        // case 'cou':
+        //   window.page.initPage('coupons', {}, 1);
+        //   break;
+        case 'out':
+          this.toggle(this.style.tipLogin, 'fn-hide')
+          break
+      }
+    },
+    onMyUl () {
+      this.toggle(this.style.menu, 'fn-hide')
+    },
+    onCancel () {
+      this.toggle(this.style.tipLogin, 'fn-hide')
+      this.toggle(this.style.menu, 'fn-hide')
+    },
+    onSure () {
+      let _this = this
+      this.toggle(this.style.tipLogin, 'fn-hide')
+      this.$http.get().then((res) => {
+        if (res.code === 0) {
+          _this.toggle(this.style.menu, 'fn-hide')
+          _this.toggle(this.style.out, 'fn-hide')
+        } else {
+          // 提示信息
+        }
+      }, (res) => {
+
+      })
     }
   }
 }
 </script>
 
 <style>
-.vux-demo {
-  text-align: center;
-}
-
-.logo {
-  width: 100px;
-  height: 100px
-}
 </style>

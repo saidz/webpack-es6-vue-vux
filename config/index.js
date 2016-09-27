@@ -19,6 +19,27 @@ module.exports = {
   dev: {
     env: require('./dev.env'),
     port: 8080,
-    proxyTable: {}
+    proxyTable: {
+      '/api': {
+        path: '/api',
+        target:'https://testzswx.cheanjia.com/',
+        changeOrigin: true,
+        ssl: false,
+        headers:{
+          cookie:'csrf-token=1474862642##9c58b768169f9b17df4ca721e9786387f1929fe5;session=e5488bb6-aa99-45d5-9193-2f0e48f7aaef',
+          host: 'testzswx.cheanjia.com'
+        }
+      },
+      '/auth': {
+        path: '/auth',
+        target: 'https://testzswx.cheanjia.com/',
+        changeOrigin: true,
+        ssl: false,
+        headers:{
+          cookie:'csrf-token=1474862642##9c58b768169f9b17df4ca721e9786387f1929fe5;session=e5488bb6-aa99-45d5-9193-2f0e48f7aaef',
+          host: 'testzswx.cheanjia.com'
+        }
+      }
+    }
   }
 }

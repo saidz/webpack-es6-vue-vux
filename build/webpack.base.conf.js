@@ -42,6 +42,28 @@ module.exports = {
     ],
     loaders: [
       {
+        test: /\.js$/,
+        loader: 'regexp-replace',
+        query: {
+          match: {
+            pattern: 'replacing_api',
+            flags: 'g'
+          },
+          replaceWith: '/api/v1'
+        }
+      },
+      {
+        test: /\.js$/,
+        loader: 'regexp-replace',
+        query: {
+          match: {
+            pattern: 'replacing_auth',
+            flags: 'g'
+          },
+          replaceWith: '/auth/weixin'
+        }
+      },
+      {
         test: /\.vue$/,
         loader: 'vue'
       },

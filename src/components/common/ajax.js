@@ -2,6 +2,7 @@
  * ajax request help
  */
 export default {
+  baseUrl: 'replacing_api',
   parse (path, id) {
     if (typeof id === 'string') {
       return path + '/' + 'id'
@@ -31,7 +32,20 @@ export default {
       if (id) {
         newPath = _this.parse(url, id)
       }
-      return this.$http.get(newPath || url)
+      return this.$http.get(_this.baseUrl + newPath)
+    }
+  },
+  // 增
+  create (path) {
+    let _this = this
+    let url = ''
+    return function (data, expand) {
+      if (expand) {
+        url = path + '/' + expand
+      } else {
+        url = path
+      }
+      return this.$http.post(_this.baseUrl + url, data)
     }
   }
 }

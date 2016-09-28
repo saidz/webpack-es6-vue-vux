@@ -1,25 +1,10 @@
 <template>
 <article class="index-box">
   <swiper :list="outerLink" auto></swiper>
-  <!--div class="swiper-container swiper-container-horizontal">
-    <div class="swiper-wrapper">
-      <figure class="swiper-slide" v-for="link in outerLink">
-        <a href="{{link.url}}">
-          <img height="" src="{{link.img}}" alt="{{link.title}}">
-        </a>
-      </figure>
-    </div>
-    <div class="swiper-pagecount swiper-pagination-clickable">
-      <span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span>
-      <span class="swiper-pagination-bullet"></span>
-      <span class="swiper-pagination-bullet"></span>
-    </div>
-  </div-->
-
   <ul class="tab-row-list">
-    <li id="inq"><em class="icon icon1" @click=inq()></em>
+    <li id="inq" v-link="{path:'/inq_inq'}"><em class="icon icon1"></em>
       <p>续保询价</p></li>
-    <li id="pre"><em class="icon icon2" @click=pre()></em>
+    <li id="pre" v-link="{path:'/inq_inq'}"><em class="icon icon2"></em>
       <p>预存保费</p></li>
   </ul>
   <div class="renewal-four-s mt10">
@@ -77,10 +62,10 @@
   </div>
   <section class="my-menu">
     <ul id="menu" :class="style.menu">
-      <li id="quo" @click="onMenu('quo')"><a>报价单</a></li>
-      <li id="order" @click="onMenu('order')"><a>预存单</a></li>
-      <li id="cou" @click="onMenu('cou')"><a>优惠券</a></li>
-      <li id="out" :class="style.out" @click="onMenu('out')"><a>退出</a></li>
+      <li id="quo" v-link="{path:'/quo_quo'}"><a>报价单</a></li>
+      <li id="order" v-link="{path:'/order'}"><a>预存单</a></li>
+      <li id="cou" v-link="{path:'/coupons'}"><a>优惠券</a></li>
+      <li id="out" :class="style.out" @click="onLogout()"><a>退出</a></li>
     </ul>
     <ul class="my-ul" @click=onMyUl()>
       <li><a>&nbsp;<em class="icon-mypeople"></em>&nbsp;</a></li>
@@ -91,7 +76,7 @@
     <div class="tip-filter-box">
       <h3 class="title">确定退出吗？</h3>
       <div class="btn-confirm">
-        <a id="cancel" class="btn btn-cancel">取消</a><a id="sure" class="btn">确定</a>
+        <a id="cancel" class="btn btn-cancel" @click="onCancel">取消</a><a id="sure" class="btn" @click="onSure">确定</a>
       </div>
     </div>
   </div>
@@ -102,6 +87,7 @@
 import url from '../common/url'
 import cache from '../common/cache'
 import Swiper from 'vux/src/components/swiper'
+import rest from '../../rest'
 
 export default {
   components: {
@@ -166,7 +152,7 @@ export default {
       // swiper
       this.outerLink = this.sp[this.storeId]
       // login status
-      this.$http.get('/api/v1/10/is-login').then((res) => {
+      this.isLogin(null, this.storeId + '/is-login').then((res) => {
         if (res.code === 0) {
           _this.is_login = res.data.is_login
           console.log('get login status succ', res)
@@ -177,31 +163,13 @@ export default {
     }
   },
   methods: {
+    isLogin: rest.login.isLogin,
+    logout: rest.login.out,
     toggle (obj, key) {
       obj[key] = !obj[key]
     },
-    inq () {
-      console.log('inq')
-    },
-    pre () {
-      console.log('pre')
-    },
-    onMenu (id) {
-      console.log('onMenu', id)
-      switch (id) {
-        // case 'quo':
-        //   window.page.initPage('quo_quo', {}, 1)
-        //   break
-        // case 'order':
-        //   window.page.initPage('order', {}, 1);
-        //   break;
-        // case 'cou':
-        //   window.page.initPage('coupons', {}, 1);
-        //   break;
-        case 'out':
-          this.toggle(this.style.tipLogin, 'fn-hide')
-          break
-      }
+    onLogout () {
+      this.toggle(this.style.tipLogin, 'fn-hide')
     },
     onMyUl () {
       this.toggle(this.style.menu, 'fn-hide')
@@ -213,7 +181,7 @@ export default {
     onSure () {
       let _this = this
       this.toggle(this.style.tipLogin, 'fn-hide')
-      this.$http.get().then((res) => {
+      this.logout().then((res) => {
         if (res.code === 0) {
           _this.toggle(this.style.menu, 'fn-hide')
           _this.toggle(this.style.out, 'fn-hide')

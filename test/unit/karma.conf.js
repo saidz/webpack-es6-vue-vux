@@ -40,11 +40,18 @@ webpackConfig.module.preLoaders.unshift({
 })
 
 // only apply babel for test files when using isparta
-webpackConfig.module.loaders.some(function (loader, i) {
-  if (loader.loader === 'babel') {
-    loader.include = path.resolve(projectRoot, 'test/unit')
-    return true
-  }
+// webpackConfig.module.loaders.some(function (loader, i) {
+//   if (loader.loader === 'babel') {
+//     loader.include = path.resolve(projectRoot, 'test/unit')
+//     return true
+//   }
+// })
+
+// add unit test path to loder by babel
+webpackConfig.module.loaders.push({
+  test: /\.js$/,
+  loader: 'babel',
+  include: path.resolve(projectRoot, 'test/unit')
 })
 
 module.exports = function (config) {
@@ -53,7 +60,8 @@ module.exports = function (config) {
     // 1. install corresponding karma launcher
     //    http://karma-runner.github.io/0.13/config/browsers.html
     // 2. add it to the `browsers` array below.
-    browsers: ['PhantomJS'],
+    // browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
     frameworks: ['mocha', 'sinon-chai'],
     reporters: ['spec', 'coverage'],
     files: ['./index.js'],

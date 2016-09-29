@@ -157,8 +157,6 @@ export default {
           _this.is_login = res.data.is_login
           console.log('get login status succ', res)
         }
-      }, (res) => {
-        console.log('get login status faild', res)
       })
     }
   },
@@ -188,8 +186,6 @@ export default {
         } else {
           // 提示信息
         }
-      }, (res) => {
-
       })
     }
   }

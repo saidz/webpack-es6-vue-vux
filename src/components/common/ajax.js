@@ -37,7 +37,7 @@ export default {
   },
   // 增
   create (path) {
-    let _this = this
+    const _this = this
     let url = ''
     return function (data, expand) {
       if (expand) {
@@ -46,6 +46,32 @@ export default {
         url = path
       }
       return this.$http.post(_this.baseUrl + url, data)
+    }
+  },
+  // put 方法~
+  put_way (path) {
+    const _this = this
+    let url = ''
+    return function (data, expand) {
+      if (expand) {
+        url = path + '/' + expand
+      } else {
+        url = path
+      }
+      return this.$http.put(_this.baseUrl + url, data)
+    }
+  },
+  // patch 方法~
+  patch (path) {
+    const _this = this
+    let url = ''
+    return function (data, expand) {
+      if (expand) {
+        url = path + '/' + expand
+      } else {
+        url = path
+      }
+      return this.$http.patch(_this.baseUrl + url, data)
     }
   }
 }

@@ -28,5 +28,22 @@ export default {
       }
     }
     return rs
+  },
+  /**
+   * 解析location.hash部分，得出模块名称和传递的参数
+   * @param hash location.hash
+   * @returns {{}}
+   */
+  parseHash (hash) {
+    let hashName = ''
+    let dataObj = {}
+    if (hash !== 'undefined' && hash !== '') {
+      let hashArr = hash.substring(1).split('?')
+      hashName = hashArr[0]
+      if (hashArr.length > 1) {
+        dataObj = this.getParams(hashArr[1])
+      }
+    }
+    return {hashName: hashName, params: dataObj}
   }
 }

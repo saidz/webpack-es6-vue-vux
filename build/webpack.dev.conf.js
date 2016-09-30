@@ -9,7 +9,17 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
   baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
 })
-
+baseWebpackConfig.module.loaders.push({ // 加载mock数据
+  test: /\.js$/,
+  loader: 'regexp-replace',
+  query: {
+    match: {
+      pattern: '\\/\\*\\s*replacing_mock\\s*\\*\\/',
+      flags: 'g'
+    },
+    replaceWith: 'import \'./components/common/mock.data\''
+  }
+})
 module.exports = merge(baseWebpackConfig, {
   module: {
     loaders: utils.styleLoaders()
@@ -31,4 +41,18 @@ module.exports = merge(baseWebpackConfig, {
       inject: true
     })
   ]
+},{
+  module: {
+    loaders: [{
+      test: /\.js$/,
+      loader: 'regexp-replace',
+      query: {
+        match: {
+          pattern: 'replacing_api',
+          flags: 'g'
+        },
+        replaceWith: '/api/v1'
+      }
+    }]
+  }
 })

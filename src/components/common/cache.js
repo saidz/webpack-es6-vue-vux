@@ -1,6 +1,7 @@
 /**
  * cache help methods
  */
+import url from './url'
 export default {
   buffer: {
     nonMark: false, // 无痕浏览：用户数据不存本地，刷新即丢失
@@ -12,6 +13,23 @@ export default {
   keyMap: {
     'CACHE_STORE_ID': 'cache_store_id',
     'CACHE_STORE_STATUS': 'cache_store_status'
+  },
+  init () { // 判断localStorage是否可用，不可用则设置为无痕模式
+    if (!window.localStorage || !window.sessionStorage) {
+      this.buffer.nonMark = true
+    } else {
+      try {
+        window.localStorage.setItem('test', {})
+        window.sessionStorage.setItem('test', {})
+      } catch (e) {
+        this.buffer.nonMark = true
+      }
+    }
+    let hashParams = url.parseHash(window.location.hash).params
+    let storeId = hashParams && hashParams.store_id ? hashParams.store_id : url.getParams(window.location.search.substr(1)).store_id
+    if (storeId) {
+      this.setLocalStorageData(this.keyMap.CACHE_STORE_ID, storeId)
+    }
   },
   /**
    * 设置会话数据，临时数据存储使用

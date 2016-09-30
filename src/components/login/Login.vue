@@ -6,9 +6,9 @@
         <div class="form-line">
           <label for="" class="form-label">&nbsp;<em class="icon-iphone-login"></em></label>
           <div class="form-element">
-            <input id="mobile" name="customer-mobile" v-model="mobile" type="tel" class="in-text" placeholder="请输入您的手机号" maxlength="11"
-                   :value="mobile">
-            <em class="icon-close"></em>
+            <input id="mobile" name="customer-mobile" v-model="mobile" type="tel" class="in-text" placeholder="请输入您的手机号" maxlength="20"
+                   :value="gapMobile">
+            <em class="icon-close" :class="style.iconClose" @click="onClear"></em>
           </div>
 
         </div>
@@ -53,7 +53,22 @@ export default {
         secondsTimer: null,
         seconds: 60,
         txt: '获取验证码'
+      },
+      style: {
+        iconClose: {
+          'fn-hide': true
+        }
       }
+    }
+  },
+  computed: {
+    gapMobile () {
+      let mobile = this.mobile.replace(/\s/g, '')
+      let isValid = util.regexpMap.regexp_mobile.test(mobile)
+      if (isValid) {
+        this.style.iconClose['fn-hide'] = false
+      }
+      return this.insertGap2Mobile(mobile)
     }
   },
   created () {
@@ -66,8 +81,22 @@ export default {
     }
   },
   methods: {
+    // api login
     login: rest.login.toLogin,
+    // api get check code
     sendCaptcha: rest.login.sendCaptcha,
+    insertGap2Mobile (mobile) {
+      // 在号码中插入空格
+      let tmpStr = ''
+      for (let i = 0; i < mobile.length; ++i) {
+        if (i === 3 || i === 7) {
+          tmpStr += ' ' + mobile[i]
+        } else {
+          tmpStr += mobile[i]
+        }
+      }
+      return tmpStr
+    },
     showToast (txt, time) {
       this.toastShow = true
       this.toastTxt = txt
@@ -92,6 +121,10 @@ export default {
         }
       })
     },
+    onClear () {
+      this.mobile = ''
+      this.style.iconClose['fn-hide'] = true
+    },
     onSubmit () {
       if (!util.regexpMap.regexp_mobile.test()) {
         this.showToast('请输入正确的手机号码')
@@ -102,7 +135,7 @@ export default {
         return false
       }
       this.login({
-        mobile: this.mobile,
+        mobile: this.mobile.replace(/\s/g, ''),
         verify_code: this.verifyCode
       }).then((res) => {
         if (res.code === 0) {

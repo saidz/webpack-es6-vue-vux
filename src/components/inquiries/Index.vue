@@ -71,12 +71,12 @@
       <li><a>&nbsp;<em class="icon-mypeople"></em>&nbsp;</a></li>
     </ul>
   </section>
-  <div class="tip-login fn-hide">
+  <div class="tip-login" :class="style.tipLogin">
     <div class="bg-filter"></div>
     <div class="tip-filter-box">
       <h3 class="title">确定退出吗？</h3>
       <div class="btn-confirm">
-        <a id="cancel" class="btn btn-cancel" @click="onCancel">取消</a><a id="sure" class="btn" @click="onSure">确定</a>
+        <a id="cancel" class="btn btn-cancel" @click=onCancel()>取消</a><a id="sure" class="btn" @click=onSure()>确定</a>
       </div>
     </div>
   </div>
@@ -98,51 +98,44 @@ export default {
       // 数据
       storeId: '10',
       sp: {
-        '10': [
-          {
-            title: 'first',
-            img: require('../../assets/images/banner1.jpg'),
-            // img: '../../assets/images/banner1.jpg',
-            url: 'http://mp.weixin.qq.com/s?__biz=MzIwMDYzNTQwMw==&mid=2247483666&idx=1&sn=debf3dd8427deb278747c6d793c2fb91#rd'
-          },
-          {
-            title: 'second',
-            // img: '../../assets/images/banner2.jpg',
-            img: require('../../assets/images/banner2.jpg'),
-            url: 'http://mp.weixin.qq.com/s?__biz=MzIwMDYzNTQwMw==&mid=2247483665&idx=1&sn=efc42323b8d6e48f2251a8b353cc20e6#rd'
-          }
-        ],
-        '2': [
-          {
-            title: 'first',
-            img: '../../assets/images/banner1.jpg',
-            url: ''
-          },
-          {
-            title: 'second',
-            img: '../../assets/images/banner2.jpg',
-            url: ''
-          }
-        ]
+        '10': [{
+          title: 'first',
+          img: require('../../assets/images/banner1.jpg'),
+          // img: '../../assets/images/banner1.jpg',
+          url: 'http://mp.weixin.qq.com/s?__biz=MzIwMDYzNTQwMw==&mid=2247483666&idx=1&sn=debf3dd8427deb278747c6d793c2fb91#rd'
+        }, {
+          title: 'second',
+          // img: '../../assets/images/banner2.jpg',
+          img: require('../../assets/images/banner2.jpg'),
+          url: 'http://mp.weixin.qq.com/s?__biz=MzIwMDYzNTQwMw==&mid=2247483665&idx=1&sn=efc42323b8d6e48f2251a8b353cc20e6#rd'
+        }],
+        '2': [{
+          title: 'first',
+          img: '../../assets/images/banner1.jpg',
+          url: ''
+        }, {
+          title: 'second',
+          img: '../../assets/images/banner2.jpg',
+          url: ''
+        }]
       },
-      is_login: false,
       // 样式
       style: {
-        menu: {
+        menu: { // 用户信息列表
           'fn-hide': true
         },
-        tipLogin: {
+        tipLogin: { // 登出提示框
           'fn-hide': true
         },
-        out: {
+        out: { // 登出按钮
           'fn-hide': true
         }
       },
-      outerLink: null
+      outerLink: []
     }
   },
   created () {
-    let _this = this
+    const _this = this
     this.storeId = url.getParams(window.location.search.substr(1)).store_id
     if (!this.storeId) {
       this.storeId = cache.getLocalStorageData(cache.keyMap.CACHE_STORE_ID)
@@ -151,10 +144,10 @@ export default {
     if (this.storeId) {
       // swiper
       this.outerLink = this.sp[this.storeId]
-      // login status
+        // login status
       this.isLogin(null, this.storeId + '/is-login').then((res) => {
         if (res.code === 0) {
-          _this.is_login = res.data.is_login
+          _this.toggle(this.style.out, 'fn-hide')
           console.log('get login status succ', res)
         }
       })

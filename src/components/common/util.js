@@ -11,6 +11,9 @@ export default {
     regexp_vin: /^[A-HJ-NPR-Z\d]{8}[\dX][A-HJ-NPR-Z\d]{2}\d{6}$/i, // 车架号
     regexp_car_mileage: /\d+/ // 里程
   },
+  /**
+   * 计时器
+   */
   sendCaptcha (timer) {
     if (timer.seconds-- > 0) {
       timer.text = '剩余: ' + timer.seconds + ' 秒'

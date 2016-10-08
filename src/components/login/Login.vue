@@ -34,21 +34,16 @@ import url from '../common/url'
 import cache from '../common/cache'
 import util from '../common/util'
 import rest from '../../rest'
-import Toast from 'vux/src/components/toast'
+import toast from '../common/toast.mixin'
 
 export default {
-  components: {
-    Toast
-  },
+  mixins: [toast],
   data () {
     return {
       mobile: '',
       verifyCode: '',
       storeId: '10',
       backUrl: '',
-      toastShow: false,
-      toastTxt: '',
-      toastTime: 1000,
       timer: {
         secondsTimer: null,
         seconds: 60,
@@ -96,13 +91,6 @@ export default {
         }
       }
       return tmpStr
-    },
-    showToast (txt, time) {
-      this.toastShow = true
-      this.toastTxt = txt
-      if (time) {
-        this.toastTime = time
-      }
     },
     onGetCode () {
       if (!util.regexpMap.regexp_mobile.test(this.mobile)) {

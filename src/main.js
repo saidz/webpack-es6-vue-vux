@@ -6,6 +6,7 @@ import App from './App'
 import Home from './components/HelloFromVux'
 import Index from './components/inquiries/Index'
 import Inq from './components/inquiries/Inq'
+import Succ from './components/inquiries/Succ'
 import Login from './components/login/Login'
 import ajax from './components/common/ajax'
 import cache from './components/common/cache'
@@ -29,6 +30,9 @@ router.map({
   },
   '/inq_inq': {  // 续保
     component: Inq
+  },
+  '/inq_succ': {  // 续保成功页面
+    component: Succ
   },
   '/login': { // 登录
     component: Login

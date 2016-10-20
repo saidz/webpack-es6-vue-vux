@@ -19,11 +19,11 @@
           <em class="icon-triangle-up" :class="style.triangle">
           </em>
         </li>
-        <li class="list-ins-li fn-hide" id="list-ins-li" :class="style.insList">
+        <li class="list-ins-li" id="list-ins-li" :class="style.insList">
           <ul>
-            <li v-for="item in list.insures" data-id="{{item.id}}" @click="onChoiceInsItem($index)">
+            <li v-for="(item, index) in list.insures" :data-id="item.id" @click="onChoiceInsItem(index)">
               {{item.name}}
-              <em class="icon-blue-hook" :class="style['insItem_'+$index]">
+              <em class="icon-blue-hook" :class="style['insItem_'+index]">
               </em>
             </li>
           </ul>
@@ -61,7 +61,7 @@
             手机号
           </label>
           <div class="form-element">
-            <input class="in-text" v-model="form.mobile" id="customer-mobile" maxlength="11" name="customer-mobile" placeholder="请输入您的手机号" type="tel" value="{{list.mobile}}">
+            <input class="in-text" v-model="form.mobile" id="customer-mobile" maxlength="11" name="customer-mobile" placeholder="请输入您的手机号" type="tel" :value="list.mobile">
             </input>
           </div>
         </div>
@@ -91,19 +91,20 @@
           <ul class="gap-left-right">
             <!-- <li>保险公司 a</li>
            <li>保险公司 b<em class="icon-blue-hook"></em></li>-->
-            <li v-for="item in list.companys" data-id="{{item.id}}" @click="onSelectInsCompany($index)">
+            <li v-for="(item, index) in list.companys" :data-id="item.id" @click="onSelectInsCompany(index)">
               {{item.name}}
-              <em class="icon-blue-hook" :class="style['insCompany_'+$index]"></em>
+              <em class="icon-blue-hook" :class="style['insCompany_'+index]"></em>
             </li>
           </ul>
         </div>
       </div>
     </div>
+    <toast :show.sync="toastShow" type="text" width="10em" :time="toastTime">{{toastTxt}}</toast>
   </article>
-  <toast :show.sync="toastShow" type="text" width="10em" :time="toastTime">{{toastTxt}}</toast>
 </template>
 
 <script>
+import Vue from 'vue'
 import rest from '../../rest'
 import util from '../common/util'
 import cache from '../common/cache'
@@ -113,6 +114,7 @@ export default {
   mixins: [toast],
   data () {
     return {
+      company: '',
       list: {
         companys: [],
         insures: [],
@@ -151,15 +153,16 @@ export default {
     let _this = this
     this.getInsuresList().then((res) => {
       if (res.code === 0) {
+        console.log(res)
         _this.list = res.data
         _this.form.mobile = _this.list.mobile
          // 保险条目样式初始化
         _this.list.insures.forEach((v, i) => {
-          _this.$set('style.insItem_' + i, {'fn-hide': !v.is_force})
+          Vue.set(_this.style, 'insItem_' + i, {'fn-hide': !v.is_force})
         })
         // 保险公司样式初始化
         _this.list.companys.forEach((v, i) => {
-          _this.$set('style.insCompany_' + i, {'fn-hide': true})
+          Vue.set(_this.style, 'insCompany_' + i, {'fn-hide': true})
         })
       }
     }, (res) => {

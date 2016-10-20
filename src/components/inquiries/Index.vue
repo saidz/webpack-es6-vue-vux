@@ -2,9 +2,9 @@
 <article class="index-box">
   <swiper :list="outerLink" auto></swiper>
   <ul class="tab-row-list">
-    <li id="inq" v-link="{path:'/inq_inq'}"><em class="icon icon1"></em>
+    <li id="inq"><router-link to="/inq_inq"><em class="icon icon1"></em></router-link>
       <p>续保询价</p></li>
-    <li id="pre" v-link="{path:'/inq_inq'}"><em class="icon icon2"></em>
+    <li id="pre"><router-link to="/inq_inq"><em class="icon icon2"></em></router-link>
       <p>预存保费</p></li>
   </ul>
   <div class="renewal-four-s mt10">
@@ -62,9 +62,9 @@
   </div>
   <section class="my-menu">
     <ul id="menu" :class="style.menu">
-      <li id="quo" v-link="{path:'/quo_quo'}"><a>报价单</a></li>
-      <li id="order" v-link="{path:'/order'}"><a>预存单</a></li>
-      <li id="cou" v-link="{path:'/coupons'}"><a>优惠券</a></li>
+      <li id="quo"><router-link to="/quo_quo">报价单</router-link></li>
+      <li id="order"><router-link to="/order">预存单</router-link></li>
+      <li id="cou"><router-link to="/coupons">优惠券</router-link></li>
       <li id="out" :class="style.out" @click="onLogout()"><a>退出</a></li>
     </ul>
     <ul class="my-ul" @click=onMyUl()>

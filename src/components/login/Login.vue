@@ -15,7 +15,7 @@
         <div class="form-line">
           <label for="" class="form-label">&nbsp;<em class="icon-password"></em></label>
           <div class="form-element">
-            <input id="verify_code" v-model="verifyCode" type="number" class="in-text" placeholder="请输入短信验证码" maxlength="6" :value="">
+            <input id="verify_code" v-model="verifyCode" type="tel" class="in-text" placeholder="请输入短信验证码" maxlength="6" value="">
           </div>
           <a class="form-code" @click="onGetCode()">{{timer.txt}}</a>
         </div>
@@ -25,8 +25,8 @@
         <a class="btn" @click="onSubmit()">登录</a>
       </div>
     </section>
+    <toast :show.sync="toastShow" type="text" :time="toastTime">{{toastTxt}}</toast>
   </article>
-  <toast :show.sync="toastShow" type="text" :time="toastTime">{{toastTxt}}</toast>
 </template>
 
 <script>
